@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from "react";import api from '@/utils/api';
 import { Trash2, Upload, Plus, X } from "lucide-react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
@@ -23,7 +22,7 @@ const ApplicationBanner = () => {
 
   const fetchBanners = async () => {
     try {
-      const res = await axios.get(
+      const res = await api.get(
         "/api/applicationSmallBanner/getAllApplicationSmallBanners",
         axiosConfig
       );
@@ -55,7 +54,7 @@ const ApplicationBanner = () => {
     formData.append("applicationSmallBannerImage", selectedFile);
 
     try {
-      const res = await axios.post(
+      const res = await api.post(
         "/api/applicationSmallBanner/uploadApplicationSmallBanner",
         formData,
         axiosConfig
@@ -73,7 +72,7 @@ const ApplicationBanner = () => {
     if (!window.confirm("Are you sure you want to delete this banner?")) return;
 
     try {
-      await axios.delete(
+      await api.delete(
         `/api/applicationSmallBanner/deleteApplicationSmallBanner/${id}`,
         axiosConfig
       );
@@ -95,7 +94,7 @@ const ApplicationBanner = () => {
     setBanners(updatedItems);
 
     try {
-      await axios.post(
+      await api.post(
         "/api/applicationSmallBanner/reorderApplicationSmallBanner",
         { banners: updatedItems.map((b) => ({ _id: b._id, order: b.order })) },
         axiosConfig

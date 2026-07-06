@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from "react";import api from '@/utils/api';
 import { Trash2, Plus, Minus } from "lucide-react";
 
 const API_URL = " /api/cart"; // backend cart route
@@ -20,7 +19,7 @@ const Cart = ({ userId: propUserId }) => {
   // Fetch cart
   const fetchCart = async () => {
     try {
-      const res = await axios.get(`${API_URL}/getAllCart/${userId}`, config);
+      const res = await api.get(`${API_URL}/getAllCart/${userId}`, config);
       setCart(res.data);
     } catch (error) {
       
@@ -35,7 +34,7 @@ const Cart = ({ userId: propUserId }) => {
     if (newQuantity < 1) return; // prevent 0 quantity
 
     try {
-      const res = await axios.put(
+      const res = await api.put(
         `${API_URL}/updateCartItem`,
         { userId, productId, quantity: newQuantity },
         config
@@ -49,7 +48,7 @@ const Cart = ({ userId: propUserId }) => {
   // Remove item from cart
   const removeItem = async (productId) => {
     try {
-      const res = await axios.delete(`${API_URL}/removeCart`, {
+      const res = await api.delete(`${API_URL}/removeCart`, {
         headers: { Authorization: `Bearer ${token}` },
         data: { userId, productId },
       });

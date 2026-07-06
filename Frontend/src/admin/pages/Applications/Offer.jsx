@@ -508,8 +508,7 @@
 
 // export default OfferPage;
 
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from "react";import api from '@/utils/api';
 import { Trash2, Edit, Plus, X } from "lucide-react";
 import Swal from "sweetalert2";
 
@@ -570,7 +569,7 @@ const OfferPage = () => {
     if (!result.isConfirmed) return;
 
     try {
-      await axios.post(
+      await api.post(
         `/api/offers/toggleOfferStatus/${offerId}`,
         { status: newStatus },
         axiosConfig
@@ -586,7 +585,7 @@ const OfferPage = () => {
 
   const fetchOffers = async () => {
     try {
-      const res = await axios.get("/api/offers/getAllOffers", axiosConfig);
+      const res = await api.get("/api/offers/getAllOffers", axiosConfig);
       console.log(res.data);
       setOffers(Array.isArray(res.data) ? res.data : res.data?.data || []);
     } catch (error) {
@@ -596,7 +595,7 @@ const OfferPage = () => {
 
   const fetchCategories = async () => {
     try {
-      const res = await axios.get(
+      const res = await api.get(
         "/api/category/getAllCategories",
         axiosConfig
       );
@@ -612,7 +611,7 @@ const OfferPage = () => {
       return;
     }
     try {
-      const res = await axios.post(
+      const res = await api.post(
         "/api/subcategory/getSubCategoriesByCategories",
         { categoryIds },
         axiosConfig
@@ -630,7 +629,7 @@ const OfferPage = () => {
       return;
     }
     try {
-      const res = await axios.post(
+      const res = await api.post(
         "/api/products/getProductsBySubCategories",
         { subCategoryIds },
         axiosConfig
@@ -665,14 +664,14 @@ const OfferPage = () => {
 
     try {
       if (editingOffer) {
-        await axios.put(
+        await api.put(
           `/api/offers/updateOffer/${editingOffer._id}`,
           formData,
           axiosConfig
         );
         Swal.fire("Success!", "Offer updated successfully", "success");
       } else {
-        await axios.post("/api/offers/createOffer", formData, axiosConfig);
+        await api.post("/api/offers/createOffer", formData, axiosConfig);
         Swal.fire("Success!", "Offer created successfully", "success");
       }
       resetForm();
@@ -724,7 +723,7 @@ const OfferPage = () => {
     }
 
     try {
-      await axios.post(
+      await api.post(
         "/api/offers/apply-offer",
         {
           offerId: activeOffer.offerId || activeOffer._id,
@@ -758,7 +757,7 @@ const OfferPage = () => {
     if (!result.isConfirmed) return;
 
     try {
-      await axios.delete(`/api/offers/deleteOffer/${id}`, axiosConfig);
+      await api.delete(`/api/offers/deleteOffer/${id}`, axiosConfig);
       fetchOffers();
       Swal.fire("Deleted!", "Offer has been deleted", "success");
     } catch (error) {

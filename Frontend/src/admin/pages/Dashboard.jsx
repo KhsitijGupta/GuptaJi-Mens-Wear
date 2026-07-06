@@ -329,8 +329,7 @@
 
 // export default Dashboard;
 
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";import api from '@/utils/api';
 import {
   ShoppingBag,
   DollarSign,
@@ -365,7 +364,7 @@ const Dashboard = ({ setActiveView }) => {
   const authData = JSON.parse(sessionStorage.getItem("admin"));
   const token = authData?.token;
 
-  const apiCall = axios.create({
+  const apiCall = api.create({
     baseURL: "/api",
     headers: {
       Authorization: `Bearer ${token}`,

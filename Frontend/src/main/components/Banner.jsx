@@ -4,8 +4,7 @@ import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";import api from '@/utils/api';
 
 const defaultSlides = [
   {
@@ -32,7 +31,7 @@ const HeroSlider = () => {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const res = await axios.get("/api/websiteBanner/getAllWebsiteBanners");
+        const res = await api.get("/api/websiteBanner/getAllWebsiteBanners");
         console.log("Fetched slider images:", res.data);
         setImages(res.data);
       } catch (error) {

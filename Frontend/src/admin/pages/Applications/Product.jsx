@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 // import { Trash2, Plus, Edit, X } from "lucide-react";
 import Swal from "sweetalert2";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-
-import axios from "axios";
+import "react-datepicker/dist/react-datepicker.css";import api from '@/utils/api';
 import {
   X,
   Trash2,
@@ -84,7 +82,7 @@ const Product = () => {
   // Fetch products
   const fetchProducts = async () => {
     try {
-      const res = await axios.get("/api/products/getAllProducts", {
+      const res = await api.get("/api/products/getAllProducts", {
         headers: { Authorization: `Bearer ${token}` },
       });
       const productsData = res.data.data || [];
@@ -99,7 +97,7 @@ const Product = () => {
   // Fetch categories
   const fetchCategories = async () => {
     try {
-      const res = await axios.get("/api/category/getAllCategories", {
+      const res = await api.get("/api/category/getAllCategories", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCategories(res.data.data || []);
@@ -111,7 +109,7 @@ const Product = () => {
   // Fetch subcategories
   const fetchSubCategories = async () => {
     try {
-      const res = await axios.get("/api/subcategory/getAllSubCategories", {
+      const res = await api.get("/api/subcategory/getAllSubCategories", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setSubCategories(res.data.data || []);
@@ -369,7 +367,7 @@ const Product = () => {
       let res;
       if (newProduct.id) {
         console.log(formData);
-        res = await axios.put(
+        res = await api.put(
           `/api/products/updateProduct/${newProduct.id}`,
           formData,
           {
@@ -380,7 +378,7 @@ const Product = () => {
           },
         );
       } else {
-        res = await axios.post("/api/products/uploadProduct", formData, {
+        res = await api.post("/api/products/uploadProduct", formData, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data",
@@ -420,7 +418,7 @@ const Product = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(`/api/products/deleteProduct/${id}`, {
+          await api.delete(`/api/products/deleteProduct/${id}`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           setProducts(products.filter((p) => p._id !== id));

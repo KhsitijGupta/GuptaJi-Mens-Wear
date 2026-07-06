@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState } from "react";import api from '@/utils/api';
 import Swal from "sweetalert2";
 import {
   FiPhone,
@@ -24,7 +23,7 @@ const Contact = ({ isHomePage = false }) => {
     e.preventDefault();
 
     try {
-      const res = await axios.post("/api/contact/addContactMessage", formData);
+      const res = await api.post("/api/contact/addContactMessage", formData);
 
       if (res.data.success) {
         Swal.fire({

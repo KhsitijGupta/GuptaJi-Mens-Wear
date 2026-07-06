@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Trash2, Plus, Edit, X } from "lucide-react";
-import Swal from "sweetalert2";
-import axios from "axios";
+import Swal from "sweetalert2";import api from '@/utils/api';
 import Pagination from "../../component/Pagination";
 
 const ITEMS_PER_PAGE = 25;
@@ -31,7 +30,7 @@ const SubCategory = () => {
   // Fetch all subcategories
   const fetchSubCategories = async () => {
     try {
-      const res = await axios.get("/api/subcategory/getAllSubCategories", {
+      const res = await api.get("/api/subcategory/getAllSubCategories", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setSubCategories(res.data.data);
@@ -44,7 +43,7 @@ const SubCategory = () => {
   // Fetch all categories for dropdowns
   const fetchCategories = async () => {
     try {
-      const res = await axios.get("/api/category/getAllCategories", {
+      const res = await api.get("/api/category/getAllCategories", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCategories(res.data.data);
@@ -133,7 +132,7 @@ const SubCategory = () => {
 
       if (newSubCategory.id) {
         // Update existing
-        await axios.put(
+        await api.put(
           `/api/subcategory/updateSubCategory/${newSubCategory.id}`,
           formData,
           {
@@ -148,7 +147,7 @@ const SubCategory = () => {
         Swal.fire("Updated!", "SubCategory updated successfully", "success");
       } else {
         // Add new
-        await axios.post("/api/subcategory/uploadSubCategory", formData, {
+        await api.post("/api/subcategory/uploadSubCategory", formData, {
           headers: {
             Authorization: `Bearer ${token}`,
             ...(newSubCategory.file && {
@@ -189,7 +188,7 @@ const SubCategory = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(`/api/subcategory/deleteSubCategory/${id}`, {
+          await api.delete(`/api/subcategory/deleteSubCategory/${id}`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           Swal.fire("Deleted!", "SubCategory deleted.", "success");

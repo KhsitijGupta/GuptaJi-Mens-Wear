@@ -430,8 +430,7 @@ import {
   LayoutGrid,
   X,
 } from "lucide-react";
-import logo from "../../Assests/logo.png";
-import axios from "axios";
+import logo from "../../Assests/logo.png";import api from '@/utils/api';
 import { clearCartState, fetchCart } from "../../redux/slices/cartSlice";
 import { clearOrders } from "../../redux/slices/orderSlice";
 import Cart from "../pages/Cart";
@@ -462,7 +461,7 @@ const Navbar = () => {
         setIsLoggedIn(true);
         dispatch(fetchCart());
 
-        const userRes = await axios.get(`/api/users/getMe`, {
+        const userRes = await api.get(`/api/users/getMe`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 

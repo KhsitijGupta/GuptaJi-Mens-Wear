@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from "react";import api from '@/utils/api';
 import Swal from "sweetalert2";
 import { XCircle, Filter, Eye, Download, UserCheck } from "lucide-react";
 import Pagination from "../component/Pagination";
@@ -62,7 +61,7 @@ const Order = () => {
   // Fetch all orders
   const fetchOrders = async () => {
     try {
-      const res = await axios.get(`${API_URL}/getAllOrders`, {
+      const res = await api.get(`${API_URL}/getAllOrders`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = res.data.orders || [];
@@ -79,7 +78,7 @@ const Order = () => {
   // Fetch delivery persons
   const fetchDeliveryPersons = async () => {
     try {
-      const res = await axios.get(`${DELIVERY_URL}/getDeliveryPersonActive`, {
+      const res = await api.get(`${DELIVERY_URL}/getDeliveryPersonActive`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const persons = res.data.activeDeliveryPersons || res.data.data || [];
@@ -133,7 +132,7 @@ const Order = () => {
   //Assign delivery partner
   const handleAssignDelivery = async (orderId, deliveryPersonId) => {
     try {
-      const res = await axios.put(
+      const res = await api.put(
         `${DELIVERY_URL}/assignDeliveryPerson`, // ✅ no /${orderId} in the URL
         { orderId, deliveryPersonId }, // ✅ send both in the body
         { headers: { Authorization: `Bearer ${token}` } },
@@ -154,7 +153,7 @@ const Order = () => {
   // Cancel order
   const handleCancelOrder = async (orderId) => {
     try {
-      const res = await axios.delete(`${API_URL}/cancelOrder/${orderId}`, {
+      const res = await api.delete(`${API_URL}/cancelOrder/${orderId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       Swal.fire("Cancelled", res.data.message, "success");
@@ -171,7 +170,7 @@ const Order = () => {
   // HANDLE ASSIGN DELIVERY PERSON
   const handleAssignDeliveryModal = async (deliveryPersonId) => {
     try {
-      await axios.put(
+      await api.put(
         `${DELIVERY_URL}/assignDeliveryPerson`,
         { orderId: currentOrderId, deliveryPersonId },
         { headers: { Authorization: `Bearer ${token}` } },
@@ -210,7 +209,7 @@ const Order = () => {
 
   const handleStatusChange = async (orderId, newStatus) => {
     try {
-      await axios.put(
+      await api.put(
         `${API_URL}/updateOrderStatus/${orderId}`,
         { orderStatus: newStatus },
         { headers: { Authorization: `Bearer ${token}` } },
@@ -227,7 +226,7 @@ const Order = () => {
   };
   const downloadInvoice = async (orderId) => {
     try {
-      const res = await axios.get(
+      const res = await api.get(
         `/api/invoice/preview/${orderId}`, // ⚠️ route backend ke according
         {
           responseType: "blob",

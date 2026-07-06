@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Trash2, Plus, Calendar, Edit, X } from "lucide-react";
-import Swal from "sweetalert2";
-import axios from "axios";
+import Swal from "sweetalert2";import api from '@/utils/api';
 
 const BlogPage = () => {
   const [blogs, setBlogs] = useState([]);
@@ -33,7 +32,7 @@ const BlogPage = () => {
 
   const fetchBlogs = async () => {
     try {
-      const res = await axios.get("/api/blog/getAllBlogs", axiosConfig);
+      const res = await api.get("/api/blog/getAllBlogs", axiosConfig);
       setBlogs(res.data);
     } catch (error) {
       console.error("Error fetching blogs:", error);
@@ -78,7 +77,7 @@ const BlogPage = () => {
     try {
       if (isEditing) {
         // ✅ Update blog with token
-        const res = await axios.put(
+        const res = await api.put(
           `/api/blog/updateBlog/${editingId}`,
           data,
           {
@@ -92,7 +91,7 @@ const BlogPage = () => {
         Swal.fire("Updated!", "Blog has been updated.", "success");
       } else {
         // ✅ Upload blog with token
-        const res = await axios.post("/api/blog/uploadBlog", data, {
+        const res = await api.post("/api/blog/uploadBlog", data, {
           headers: {
             ...axiosConfig.headers,
             "Content-Type": "multipart/form-data",
@@ -128,7 +127,7 @@ const BlogPage = () => {
 
     if (confirm.isConfirmed) {
       try {
-        await axios.delete(`/api/blog/deleteBlog/${id}`, axiosConfig);
+        await api.delete(`/api/blog/deleteBlog/${id}`, axiosConfig);
         setBlogs(blogs.filter((blog) => blog._id !== id));
         Swal.fire("Deleted!", "Your blog has been deleted.", "success");
       } catch (error) {

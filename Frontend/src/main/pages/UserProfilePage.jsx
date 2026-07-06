@@ -10,8 +10,7 @@ import {
   fetchAddresses,
   deleteAddress,
 } from "../../redux/slices/addressSlice";
-import { Trash2 } from "lucide-react";
-import axios from "axios";
+import { Trash2 } from "lucide-react";import api from '@/utils/api';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import FallbackImage from "../../Assests/fallBackUser.png";
@@ -77,7 +76,7 @@ const UserProfilePage = () => {
         setUserLoading(true);
 
         // ✅ Fetch User Profile
-        const userRes = await axios.get(`/api/users/getMe`, {
+        const userRes = await api.get(`/api/users/getMe`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -130,7 +129,7 @@ const UserProfilePage = () => {
   useEffect(() => {
     const fetchStates = async () => {
       try {
-        const res = await axios.post(
+        const res = await api.post(
           "https://countriesnow.space/api/v0.1/countries/states",
           {
             country: "India",
@@ -152,7 +151,7 @@ const UserProfilePage = () => {
     setFormData({ ...formData, state: state, city: "" });
 
     try {
-      const res = await axios.post(
+      const res = await api.post(
         "https://countriesnow.space/api/v0.1/countries/state/cities",
         {
           country: "India",
@@ -197,7 +196,7 @@ const UserProfilePage = () => {
 
       // User profile refresh (user.address populated hai to)
       const token = localStorage.getItem("token");
-      const userRes = await axios.get("/api/users/getMe", {
+      const userRes = await api.get("/api/users/getMe", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUser(userRes.data.user);
@@ -621,7 +620,7 @@ const UserProfilePage = () => {
                     formData.append("profileImage", editForm.profileImage);
                   }
 
-                  await axios.put(`/api/users/editUser/${user._id}`, formData, {
+                  await api.put(`/api/users/editUser/${user._id}`, formData, {
                     headers: {
                       Authorization: `Bearer ${token}`,
                       "Content-Type": "multipart/form-data",
@@ -629,7 +628,7 @@ const UserProfilePage = () => {
                   });
 
                   // Refresh user data
-                  const userRes = await axios.get(`/api/users/getMe`, {
+                  const userRes = await api.get(`/api/users/getMe`, {
                     headers: { Authorization: `Bearer ${token}` },
                   });
                   setUser(userRes.data?.user);

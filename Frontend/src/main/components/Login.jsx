@@ -488,8 +488,7 @@
 
 // export default Login;
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";import api from '@/utils/api';
 import logo from "../../Assests/logo.png";
 
 const Login = () => {
@@ -534,7 +533,7 @@ const Login = () => {
     setError("");
 
     try {
-      const res = await axios.post("/api/auth/send-otp", { email });
+      const res = await api.post("/api/auth/send-otp", { email });
 
       if (res.data.success) {
         setOtpSent(true);
@@ -559,7 +558,7 @@ const Login = () => {
     setError("");
 
     try {
-      const res = await axios.post("/api/auth/verify-otp/user", {
+      const res = await api.post("/api/auth/verify-otp/user", {
         email,
         otp,
       });
@@ -608,7 +607,7 @@ const Login = () => {
         formData.append("profileImage", image);
       }
 
-      const res = await axios.post("/api/users/signup", formData, {
+      const res = await api.post("/api/users/signup", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

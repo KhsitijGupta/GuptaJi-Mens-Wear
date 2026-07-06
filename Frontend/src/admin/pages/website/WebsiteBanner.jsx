@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from "react";import api from '@/utils/api';
 import { Trash2, Upload, Plus, X } from "lucide-react";
 
 const WebsiteBanner = () => {
@@ -22,7 +21,7 @@ const WebsiteBanner = () => {
 
   const fetchBanners = async () => {
     try {
-      const res = await axios.get(
+      const res = await api.get(
         "/api/websiteBanner/getAllWebsiteBanners",
         axiosConfig
       );
@@ -52,7 +51,7 @@ const WebsiteBanner = () => {
     formData.append("websiteBannerImage", selectedFile);
 
     try {
-      const res = await axios.post(
+      const res = await api.post(
         "/api/websiteBanner/uploadWebsiteBanner",
         formData,
         axiosConfig
@@ -70,7 +69,7 @@ const WebsiteBanner = () => {
     if (!window.confirm("Are you sure you want to delete this banner?")) return;
 
     try {
-      await axios.delete(
+      await api.delete(
         `/api/websiteBanner/deleteWebsiteBanner/${id}`,
         axiosConfig
       );

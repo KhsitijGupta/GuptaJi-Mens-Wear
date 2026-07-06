@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Trash2, Plus, Edit, X } from "lucide-react";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";import api from '@/utils/api';
 import Pagination from "../../component/Pagination";
 
 const ITEMS_PER_PAGE = 25;
@@ -34,7 +33,7 @@ const Category = () => {
   // Fetch all categories
   const fetchCategories = async () => {
     try {
-      const res = await axios.get("/api/category/getAllCategories", {
+      const res = await api.get("/api/category/getAllCategories", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCategories(res.data.data);
@@ -106,7 +105,7 @@ const Category = () => {
           formData.append("categoryImage", newCategory.file);
           formData.append("categoryName", newCategory.categoryName);
 
-          res = await axios.put(
+          res = await api.put(
             `/api/category/updateCategory/${newCategory.id}`,
             formData,
             {
@@ -121,7 +120,7 @@ const Category = () => {
             categoryName: newCategory.categoryName,
             image: newCategory.image,
           };
-          res = await axios.put(
+          res = await api.put(
             `/api/category/updateCategory/${newCategory.id}`,
             categoryData,
             { headers: { Authorization: `Bearer ${token}` } },
@@ -139,7 +138,7 @@ const Category = () => {
           formData.append("categoryImage", newCategory.file);
           formData.append("categoryName", newCategory.categoryName);
 
-          res = await axios.post("/api/category/uploadCategory", formData, {
+          res = await api.post("/api/category/uploadCategory", formData, {
             headers: {
               "Content-Type": "multipart/form-data",
               Authorization: `Bearer ${token}`,
@@ -150,7 +149,7 @@ const Category = () => {
             categoryName: newCategory.categoryName,
           };
 
-          res = await axios.post("/api/category/createCategory", categoryData, {
+          res = await api.post("/api/category/createCategory", categoryData, {
             headers: { Authorization: `Bearer ${token}` },
           });
         }
@@ -187,7 +186,7 @@ const Category = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(`/api/category/deletecategory/${id}`, {
+          await api.delete(`/api/category/deletecategory/${id}`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           setCategories(categories.filter((c) => c._id !== id));

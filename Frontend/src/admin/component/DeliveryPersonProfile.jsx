@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from "react";import api from '@/utils/api';
 import {
   User,
   Phone,
@@ -27,7 +26,7 @@ const DeliveryPersonProfile = ({ deliveryPersonId }) => {
         const authData = JSON.parse(sessionStorage.getItem("admin"));
         const token = authData?.token;
 
-        const res = await axios.get(
+        const res = await api.get(
           `/api/delivery-persons/getDeliveryPersonById/${deliveryPersonId}`,
           { headers: { Authorization: `Bearer ${token}` } },
         );

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import { Link } from "react-router-dom";import api from '@/utils/api';
 
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -12,7 +11,7 @@ const Categories = ({ isHomePage = false }) => {
   // Fetch Categories
   const fetchCategories = async () => {
     try {
-      const { data } = await axios.get(
+      const { data } = await api.get(
         "/api/category/getAllCategories"
       );
       setCategories(data?.data || []);

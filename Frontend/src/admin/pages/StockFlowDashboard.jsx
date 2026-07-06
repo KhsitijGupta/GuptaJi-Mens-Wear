@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useEffect, useState } from "react";import api from '@/utils/api';
 import { FilterX } from "lucide-react";
 import Pagination from "../component/Pagination";
 
@@ -140,7 +139,7 @@ const StockFlowDashboard = () => {
         const authData = JSON.parse(sessionStorage.getItem("admin"));
         const token = authData?.token;
 
-        const res = await axios.get("/api/orders/ProductStockFlow", {
+        const res = await api.get("/api/orders/ProductStockFlow", {
           headers: { Authorization: `Bearer ${token}` },
         });
 

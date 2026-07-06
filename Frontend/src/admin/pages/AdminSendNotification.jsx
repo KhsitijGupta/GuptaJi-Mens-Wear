@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";import api from '@/utils/api';
 import Swal from "sweetalert2";
 
 const AdminSendNotification = () => {
@@ -17,7 +16,7 @@ const AdminSendNotification = () => {
       const authData = JSON.parse(sessionStorage.getItem("admin"));
       const token = authData?.token;
 
-      const res = await axios.get("/api/fire/admin/get-notification/admin", {
+      const res = await api.get("/api/fire/admin/get-notification/admin", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -77,7 +76,7 @@ const AdminSendNotification = () => {
         });
       }
 
-      const res = await axios.post(
+      const res = await api.post(
         "/api/fire/admin/send-all",
         { title, body },
         { headers: { Authorization: `Bearer ${token}` } }

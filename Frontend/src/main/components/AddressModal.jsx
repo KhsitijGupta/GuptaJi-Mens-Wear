@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
-import axios from "axios";
+import React, { useEffect, useState, useRef } from "react";import api from '@/utils/api';
 import Swal from "sweetalert2";
 import { useDispatch } from "react-redux";
 import { createAddress, fetchAddresses } from "../../redux/slices/addressSlice";
@@ -47,7 +46,7 @@ const AddressModal = ({ show, setShow, user, onAddressCreated }) => {
   useEffect(() => {
     const fetchStates = async () => {
       try {
-        const res = await axios.post(
+        const res = await api.post(
           "https://countriesnow.space/api/v0.1/countries/states",
           { country: "India" },
         );
@@ -65,7 +64,7 @@ const AddressModal = ({ show, setShow, user, onAddressCreated }) => {
     setShowStateDropdown(false);
 
     try {
-      const res = await axios.post(
+      const res = await api.post(
         "https://countriesnow.space/api/v0.1/countries/state/cities",
         {
           country: "India",
@@ -86,7 +85,7 @@ const AddressModal = ({ show, setShow, user, onAddressCreated }) => {
     setShowCityDropdown(false);
 
     try {
-      const res = await axios.get(
+      const res = await api.get(
         `https://api.postalpincode.in/postoffice/${city}`,
       );
 

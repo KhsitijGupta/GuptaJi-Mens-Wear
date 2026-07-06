@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";import api from '@/utils/api';
 import Swal from "sweetalert2";
 import { Eye, Edit, Trash2, X, Upload, Search } from "lucide-react";
 import Pagination from "../component/Pagination";
@@ -51,7 +50,7 @@ const Users = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get("/api/users/getAllUsers", {
+      const res = await api.get("/api/users/getAllUsers", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUsers(res.data);
@@ -124,7 +123,7 @@ const Users = () => {
       // if (formData.profileImage)
       //   form.append("userprofileImage", formData.profileImage);
 
-      await axios.put(
+      await api.put(
         `/api/users/updateUserProfile/${selectedUser._id}`,
         form,
         {
@@ -154,7 +153,7 @@ const Users = () => {
       confirmButtonText: "Delete",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await axios.delete(`/api/users/deleteUser/${id}`, {
+        await api.delete(`/api/users/deleteUser/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         Swal.fire("Deleted!", "User successfully deleted.", "success");

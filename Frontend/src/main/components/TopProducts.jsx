@@ -247,8 +247,7 @@
 // export default TopProducts;
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiChevronUp, FiChevronRight } from "react-icons/fi";
-import axios from "axios";
+import { FiChevronUp, FiChevronRight } from "react-icons/fi";import api from '@/utils/api';
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCart } from "../../redux/slices/cartSlice";
 import Navbar from "../components/Navbar";
@@ -284,7 +283,7 @@ const TopProducts = ({ isHomePage = false }) => {
 
   const fetchProducts = async () => {
     try {
-      const res = await axios.get("/api/products/getAllProducts");
+      const res = await api.get("/api/products/getAllProducts");
       const data = res.data.success ? res.data.data || [] : [];
       setProducts(data);
       setFilteredProducts(data);
@@ -297,7 +296,7 @@ const TopProducts = ({ isHomePage = false }) => {
 
   const fetchCategories = async () => {
     try {
-      const res = await axios.get("/api/category/getAllCategories");
+      const res = await api.get("/api/category/getAllCategories");
       setCategories(res.data.success ? res.data.data || [] : []);
     } catch (err) {
       console.error("Category fetch error:", err);
@@ -306,7 +305,7 @@ const TopProducts = ({ isHomePage = false }) => {
 
   const fetchSubCategories = async () => {
     try {
-      const res = await axios.get("/api/subcategory/getAllSubCategories");
+      const res = await api.get("/api/subcategory/getAllSubCategories");
       setSubCategories(res.data.success ? res.data.data || [] : []);
     } catch (err) {
       console.error("Subcategory fetch error:", err);

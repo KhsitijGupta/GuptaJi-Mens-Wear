@@ -1,6 +1,5 @@
 // src/pages/Contact.js
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from "react";import api from '@/utils/api';
 import Swal from "sweetalert2";
 import { Trash2, Eye } from "lucide-react"; // Updated icons
 import Pagination from "../component/Pagination";
@@ -14,7 +13,7 @@ const Contact = () => {
   // Fetch all contact messages
   const fetchMessages = async () => {
     try {
-      const res = await axios.get("/api/contact/getContactMessages"); // relative path
+      const res = await api.get("/api/contact/getContactMessages"); // relative path
       setMessages(res.data.messages);
       setLoading(false);
     } catch (error) {
@@ -42,7 +41,7 @@ const Contact = () => {
 
     if (confirm.isConfirmed) {
       try {
-        await axios.delete(`/api/contact/deleteContactMessage/${id}`);
+        await api.delete(`/api/contact/deleteContactMessage/${id}`);
         Swal.fire("Deleted!", "Message has been deleted.", "success");
         fetchMessages();
       } catch (error) {

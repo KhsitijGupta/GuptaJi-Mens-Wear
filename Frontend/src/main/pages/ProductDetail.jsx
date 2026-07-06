@@ -347,8 +347,7 @@
 //   </div>
 // );
 import { useParams, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useEffect, useState } from "react";import api from '@/utils/api';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { useDispatch, useSelector } from "react-redux";
@@ -388,7 +387,7 @@ export default function ProductDetail() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await axios.get(`/api/products/getProductById/${id}`);
+        const res = await api.get(`/api/products/getProductById/${id}`);
         setProduct(res?.data?.data);
       } catch (err) {
         console.error(err);

@@ -246,8 +246,7 @@
 
 // export default WalletCoin;
 
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from "react";import api from '@/utils/api';
 import Swal from "sweetalert2";
 
 const Toast = Swal.mixin({
@@ -280,7 +279,7 @@ const WalletCoin = () => {
   const fetchRules = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("/api/coins/all", authHeader);
+      const res = await api.get("/api/coins/all", authHeader);
       setRules(res.data.data || []);
     } catch {
       Toast.fire({
@@ -309,13 +308,13 @@ const WalletCoin = () => {
 
     try {
       if (editId) {
-        await axios.put(`/api/coins/update/${editId}`, form, authHeader);
+        await api.put(`/api/coins/update/${editId}`, form, authHeader);
         Toast.fire({
           icon: "success",
           title: "Coin rule updated successfully",
         });
       } else {
-        await axios.post("/api/coins/create", form, authHeader);
+        await api.post("/api/coins/create", form, authHeader);
         Toast.fire({
           icon: "success",
           title: "Coin rule created successfully",
@@ -351,7 +350,7 @@ const WalletCoin = () => {
     if (!result.isConfirmed) return;
 
     try {
-      await axios.delete(`/api/coins/delete/${id}`, authHeader);
+      await api.delete(`/api/coins/delete/${id}`, authHeader);
       Toast.fire({ icon: "success", title: "Rule deleted successfully" });
       fetchRules();
     } catch {
@@ -362,7 +361,7 @@ const WalletCoin = () => {
   // Toggle active
   const toggleActive = async (rule) => {
     try {
-      await axios.put(
+      await api.put(
         `/api/coins/update/${rule._id}`,
         { isActive: !rule.isActive },
         authHeader

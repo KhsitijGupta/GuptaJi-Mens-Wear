@@ -1,5 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";import api from '@/utils/api';
 
 const API = "/api/addresses";
 
@@ -10,7 +9,7 @@ export const fetchAddresses = createAsyncThunk(
   "address/fetchAddresses",
   async ({ rejectWithValue }) => {
     try {
-      const res = await axios.get(`${API}/getAddressUserId`, {
+      const res = await api.get(`${API}/getAddressUserId`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -34,7 +33,7 @@ export const createAddress = createAsyncThunk(
   async (addressData, { rejectWithValue }) => {
     try {
       console.log(addressData);
-      const res = await axios.post(
+      const res = await api.post(
         `/api/addresses/createAddress`,
         addressData,
         {
@@ -61,7 +60,7 @@ export const updateAddress = createAsyncThunk(
   "address/updateAddress",
   async ({ id, data }, { rejectWithValue }) => {
     try {
-      const res = await axios.put(`${API}/${id}`, data, {
+      const res = await api.put(`${API}/${id}`, data, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -83,7 +82,7 @@ export const deleteAddress = createAsyncThunk(
   "address/deleteAddress",
   async (id, { rejectWithValue }) => {
     try {
-      await axios.delete(`${API}/deleteAddressId/${id}`, {
+      await api.delete(`${API}/deleteAddressId/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

@@ -212,8 +212,7 @@
 // export default SubCategoryPage;
 import React, { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { FiArrowLeft } from "react-icons/fi";
-import axios from "axios";
+import { FiArrowLeft } from "react-icons/fi";import api from '@/utils/api';
 import { useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "../components/Navbar";
@@ -243,7 +242,7 @@ const SubCategoryPage = ({ isHomePage = false }) => {
       try {
         setLoadingSub(true);
         setError("");
-        const { data } = await axios.get(
+        const { data } = await api.get(
           `/api/subcategory/getSubCategoriesByCategory/${categoryId}`,
         );
 
@@ -279,7 +278,7 @@ const SubCategoryPage = ({ isHomePage = false }) => {
       try {
         setLoadingProducts(true);
         setError("");
-        const { data } = await axios.get(
+        const { data } = await api.get(
           `/api/products/getProductsBySubCategory/${selectedSubcategory}`,
         );
 

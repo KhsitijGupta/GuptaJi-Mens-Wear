@@ -939,8 +939,7 @@
 // };
 
 // export default AdminDeliveryAccounting;
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";import api from '@/utils/api';
 import {
   ArrowLeft,
   Truck,
@@ -1010,7 +1009,7 @@ const AdminDeliveryAccounting = () => {
 
   const loadDeliveryPersons = async () => {
     try {
-      const res = await axios.get(
+      const res = await api.get(
         "/api/delivery-persons/getAllDeliveryPersons",
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -1024,7 +1023,7 @@ const AdminDeliveryAccounting = () => {
 
   const loadDashboard = async (dpId) => {
     try {
-      const res = await axios.get(`/api/deliveryaccounting/dashboard/${dpId}`, {
+      const res = await api.get(`/api/deliveryaccounting/dashboard/${dpId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setDashboardData(res.data);
@@ -1035,7 +1034,7 @@ const AdminDeliveryAccounting = () => {
 
   const loadTransactions = async (dpId) => {
     try {
-      const res = await axios.get(
+      const res = await api.get(
         `/api/deliveryaccounting/transactionsForAdmin/${dpId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -1090,7 +1089,7 @@ const AdminDeliveryAccounting = () => {
   const handleSettlementSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(
+      await api.post(
         "/api/deliveryaccounting/admin-settlement",
         {
           deliveryPersonId: selectedDP._id,
@@ -1113,7 +1112,7 @@ const AdminDeliveryAccounting = () => {
   const handleCreditSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(
+      await api.post(
         "/api/deliveryaccounting/wallet-credit",
         {
           deliveryPersonId: selectedDP._id,
@@ -1134,7 +1133,7 @@ const AdminDeliveryAccounting = () => {
   const handleDebitSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(
+      await api.post(
         "/api/deliveryaccounting/wallet-debit",
         {
           deliveryPersonId: selectedDP._id,

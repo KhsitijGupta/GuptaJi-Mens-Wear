@@ -143,8 +143,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Autoplay } from "swiper/modules";
-import axios from "axios";
+import { Pagination, Autoplay } from "swiper/modules";import api from '@/utils/api';
 import { motion } from "framer-motion";
 
 import "swiper/css";
@@ -160,7 +159,7 @@ const CategoryPage = ({ isHomePage = false }) => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const { data } = await axios.get("/api/category/getAllCategories");
+        const { data } = await api.get("/api/category/getAllCategories");
         setCategories(data?.data || []);
       } catch (error) {
         console.error(error);

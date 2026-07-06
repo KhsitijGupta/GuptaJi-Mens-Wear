@@ -1,5 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";import api from '@/utils/api';
 
 const API = "/api/orders";
 
@@ -10,7 +9,7 @@ export const createOrder = createAsyncThunk(
   "order/createOrder",
   async ({ shippingAddress, paymentMethod }, { rejectWithValue }) => {
     try {
-      const res = await axios.post(
+      const res = await api.post(
         `${API}/createOrder`,
         { shippingAddress, paymentMethod },
         {
@@ -36,7 +35,7 @@ export const verifyRazorpayPayment = createAsyncThunk(
     { rejectWithValue },
   ) => {
     try {
-      const res = await axios.post(
+      const res = await api.post(
         `${API}/verifyRazorpayPayment`,
         { orderId, razorpayPaymentId, razorpayOrderId, razorpaySignature },
         {
@@ -61,7 +60,7 @@ export const getUserOrders = createAsyncThunk(
   "order/getUserOrders",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await axios.get(`${API}/getUserOrder`, {
+      const res = await api.get(`${API}/getUserOrder`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -109,7 +108,7 @@ export const cancelOrder = createAsyncThunk(
   "order/cancelOrder",
   async (orderId, { rejectWithValue }) => {
     try {
-      await axios.delete(`${API}/cancelOrder/${orderId}`, {
+      await api.delete(`${API}/cancelOrder/${orderId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

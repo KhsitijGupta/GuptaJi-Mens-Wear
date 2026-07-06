@@ -15,8 +15,7 @@ import {
   createOrder,
   verifyRazorpayPayment,
 } from "../../redux/slices/orderSlice";
-import { Trash2 } from "lucide-react";
-import axios from "axios";
+import { Trash2 } from "lucide-react";import api from '@/utils/api';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Lottie from "lottie-react";
@@ -87,7 +86,7 @@ const Checkout = () => {
     const fetchUser = async () => {
       try {
         setUserLoading(true);
-        const res = await axios.get("/api/users/getMe", {
+        const res = await api.get("/api/users/getMe", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUser(res.data.user);
@@ -110,7 +109,7 @@ const Checkout = () => {
   useEffect(() => {
     const fetchStates = async () => {
       try {
-        const res = await axios.post(
+        const res = await api.post(
           "https://countriesnow.space/api/v0.1/countries/states",
           {
             country: "India",
@@ -132,7 +131,7 @@ const Checkout = () => {
     setFormData({ ...formData, state: state, city: "" });
 
     try {
-      const res = await axios.post(
+      const res = await api.post(
         "https://countriesnow.space/api/v0.1/countries/state/cities",
         {
           country: "India",

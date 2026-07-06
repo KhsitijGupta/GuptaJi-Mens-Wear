@@ -543,8 +543,7 @@ import {
   RotateCcw,
   X,
 } from "lucide-react";
-import Swal from "sweetalert2";
-import axios from "axios";
+import Swal from "sweetalert2";import api from '@/utils/api';
 import Pagination from "../component/Pagination";
 import DeliveryPersonProfile from "../component/DeliveryPersonProfile";
 import DeliveryPersonModal from "../component/DeliveryPersonModal";
@@ -598,7 +597,7 @@ const DeliveryPersons = () => {
 
   const fetchDeliveryPersons = async () => {
     try {
-      const res = await axios.get(`${API_URL}/getAllDeliveryPersons`, {
+      const res = await api.get(`${API_URL}/getAllDeliveryPersons`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setDeliveryPersons(res.data.data || []);
@@ -650,7 +649,7 @@ const DeliveryPersons = () => {
 
     try {
       if (formData._id) {
-        await axios.put(
+        await api.put(
           `${API_URL}/updateDeliveryPerson/${formData._id}`,
           payload,
           {
@@ -662,7 +661,7 @@ const DeliveryPersons = () => {
         );
         Swal.fire("Updated!", "Delivery person updated.", "success");
       } else {
-        await axios.post(`${API_URL}/createDeliveryPerson`, payload, {
+        await api.post(`${API_URL}/createDeliveryPerson`, payload, {
           headers: {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
@@ -688,7 +687,7 @@ const DeliveryPersons = () => {
         return;
       }
 
-      const res = await axios.put(
+      const res = await api.put(
         `${API_URL}/deliveryPerson/status/${id}`,
         { adminApproved: status },
         {
@@ -778,7 +777,7 @@ const DeliveryPersons = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(`${API_URL}/deleteDeliveryPerson/${id}`, {
+          await api.delete(`${API_URL}/deleteDeliveryPerson/${id}`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           Swal.fire("Deleted!", "Delivery person deleted.", "success");
