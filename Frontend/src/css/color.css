@@ -1,0 +1,53 @@
+/* ===========================================
+   Global Color Palette
+   Primary: #2485A8
+   =========================================== */
+
+:root {
+  /* Primary */
+  --primary: #2485a8;
+  --primary-light: #4aa5c7;
+  --primary-dark: #176b87;
+
+  /* Secondary */
+  --secondary: #1e293b;
+
+  /* Accent */
+  --accent: #f59e0b;
+
+  /* Success */
+  --success: #22c55e;
+
+  /* Danger */
+  --danger: #ef4444;
+
+  /* Warning */
+  --warning: #fbbf24;
+
+  /* Info */
+  --info: #06b6d4;
+
+  /* Background */
+  --background: #f8fafc;
+
+  /* Surface / Cards */
+  --surface: #ffffff;
+
+  /* Dark */
+  --dark: #111827;
+  --black: #000000;
+
+  /* Text */
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --text-light: #9ca3af;
+
+  /* Border */
+  --border: #e5e7eb;
+
+  /* Hover */
+  --hover: #1b6f8a;
+
+  /* Active */
+  --active: #14566a;
+}

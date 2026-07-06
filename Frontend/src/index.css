@@ -1,0 +1,11 @@
+:root {
+  --primary: #bd2858;
+  --secondary: #dbb243;
+  --third: #4d196c;
+}
+
+@import "tailwindcss";
+/* SweetAlert2 Toast Progress Bar Color */
+.swal2-timer-progress-bar {
+  background: #ffffff !important; /* Green */
+}
