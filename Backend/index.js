@@ -89,6 +89,12 @@ app.use((err, req, res, next) => {
     .json({ success: false, message: "Something broke!", error: err.message });
 });
 
+app.get("/", (req, res) => {
+  res.send({
+    status: 200,
+    msg: "GuptaJi Mens WearProject is running Perfectly ...",
+  });
+});
 // DB
 mongoose
   .connect(process.env.MONGO_URI)
