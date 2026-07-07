@@ -1,9 +1,8 @@
-
-
 // controllers/applicationBannerController.js
 const ApplicationBanner = require("../models/ApplicationBanner");
 const fs = require("fs");
 const path = require("path");
+const { uploadFile } = require("../services/cloudinaryService");
 
 // Upload banner
 module.exports.uploadApplicationBanner = async (req, res) => {
@@ -16,8 +15,9 @@ module.exports.uploadApplicationBanner = async (req, res) => {
     const lastBanner = await ApplicationBanner.findOne().sort({ order: -1 });
     const newOrder = lastBanner ? lastBanner.order + 1 : 0;
 
+    const uploadedImage = await uploadFile(req.file.path, "applicationBanner");
     const applicationBanner = new ApplicationBanner({
-      image: `/uploads/applicationBanner/${req.file.filename}`,
+      image: uploadedImage.secure_url,
       order: newOrder,
     });
 
@@ -31,7 +31,9 @@ module.exports.uploadApplicationBanner = async (req, res) => {
 // Get all banners sorted by order
 module.exports.getAllApplicationBanners = async (req, res) => {
   try {
-    const applicationBanners = await ApplicationBanner.find().sort({ order: 1 });
+    const applicationBanners = await ApplicationBanner.find().sort({
+      order: 1,
+    });
     res.status(200).json(applicationBanners);
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch banners", error: err });
@@ -41,7 +43,9 @@ module.exports.getAllApplicationBanners = async (req, res) => {
 // Delete banner
 module.exports.deleteApplicationBanner = async (req, res) => {
   try {
-    const applicationBanner = await ApplicationBanner.findByIdAndDelete(req.params.id);
+    const applicationBanner = await ApplicationBanner.findByIdAndDelete(
+      req.params.id,
+    );
     if (!applicationBanner) {
       return res.status(404).json({ message: "Banner not found" });
     }
@@ -65,7 +69,7 @@ module.exports.reorderApplicationBanners = async (req, res) => {
     }
 
     const updatePromises = banners.map((b) =>
-      ApplicationBanner.findByIdAndUpdate(b._id, { order: b.order })
+      ApplicationBanner.findByIdAndUpdate(b._id, { order: b.order }),
     );
 
     await Promise.all(updatePromises);

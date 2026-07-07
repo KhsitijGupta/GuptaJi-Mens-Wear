@@ -1,10 +1,13 @@
 const Blog = require("../models/Blog");
+const { uploadFile } = require("../services/cloudinaryService");
 
 // Upload Blog
 module.exports.uploadBlog = async (req, res) => {
   try {
     const { title, date, description, link } = req.body;
-    const image = req.file ? `/uploads/blog/${req.file.filename}` : null;
+    const image = req.file
+      ? (await uploadFile(req.file.path, "blog")).secure_url
+      : null;
 
     const blog = new Blog({ title, date, description, link, image });
     await blog.save();
@@ -33,13 +36,13 @@ module.exports.updateBlog = async (req, res) => {
 
     // Only update image if a new file is uploaded
     if (req.file) {
-      updateData.image = `/uploads/blog/${req.file.filename}`;
+      updateData.image = (await uploadFile(req.file.path, "blog")).secure_url;
     }
 
     const updatedBlog = await Blog.findByIdAndUpdate(
       req.params.id,
       updateData,
-      { new: true } // return updated document
+      { new: true }, // return updated document
     );
 
     res.json(updatedBlog);

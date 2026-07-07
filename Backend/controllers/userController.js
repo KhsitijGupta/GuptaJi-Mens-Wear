@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const Address = require("../models/Address");
 const sendMail = require("../utils/sendMail");
+const { uploadFile } = require("../services/cloudinaryService");
 const fs = require("fs");
 const path = require("path");
 
@@ -48,7 +49,8 @@ module.exports.completeUserProfile = async (req, res) => {
 
     let profileImage = null;
     if (req.file) {
-      profileImage = `/uploads/userprofileImage/${req.file.filename}`;
+      profileImage = (await uploadFile(req.file.path, "users/profileImage"))
+        .secure_url;
     }
 
     // ✅ Create user with password
@@ -123,7 +125,8 @@ module.exports.signup = async (req, res) => {
     // Handle profile image
     let profileImage = null;
     if (req.file) {
-      profileImage = `/uploads/profileImage/${req.file.filename}`;
+      profileImage = (await uploadFile(req.file.path, "users/profileImage"))
+        .secure_url;
     }
 
     // Create user
@@ -213,7 +216,9 @@ module.exports.editUser = async (req, res) => {
 
     // 6️⃣ Handle profile image if using file upload
     if (req.file) {
-      user.profileImage = `/uploads/profileImage/${req.file.filename}`;
+      user.profileImage = (
+        await uploadFile(req.file.path, "users/profileImage")
+      ).secure_url;
     }
 
     // 7️⃣ Save changes
@@ -471,14 +476,11 @@ module.exports.deleteUser = async (req, res) => {
     }
 
     // 2️⃣ Delete user profile image from uploads folder
-    if (user.profileImage) {
-      // user.profileImage example: "/uploads/userprofileImage/xyz.jpg"
-
+    if (user.profileImage && user.profileImage.startsWith("/uploads/")) {
       const imagePath = path.join(__dirname, "..", user.profileImage);
 
-      // Check if file exists
       if (fs.existsSync(imagePath)) {
-        fs.unlinkSync(imagePath); // Delete file
+        fs.unlinkSync(imagePath);
         console.log("🗑️ Deleted image:", imagePath);
       } else {
         console.log("⚠️ Image not found, skipping:", imagePath);

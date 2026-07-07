@@ -5,6 +5,7 @@ const path = require("path");
 const Product = require("../models/Product");
 const wishlist = require("../models/wishlist");
 const Cart = require("../models/Cart");
+const { uploadFile } = require("../services/cloudinaryService");
 
 // -----------------------------
 // @desc    Upload a new subcategory with image
@@ -41,10 +42,11 @@ module.exports.uploadSubCategory = async (req, res) => {
       subCategoryId = "ZKSCAT0001";
     }
 
+    const uploadedImage = await uploadFile(req.file.path, "subcategory");
     const newSubCategory = new SubCategory({
       subCategoryName,
       description,
-      image: `/uploads/Subcategory/${req.file.filename}`, // ✅ relative path
+      image: uploadedImage.secure_url,
       categoryId,
       products,
       subCategoryId,
@@ -128,15 +130,9 @@ module.exports.updateSubCategory = async (req, res) => {
 
     // ✅ If new image uploaded → delete old one
     if (req.file) {
-      if (subCategory.image) {
-        const oldPath = path.join(
-          __dirname,
-          "..",
-          subCategory.image, // image = uploads/subcategory/filename.jpg
-        );
-        if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
-      }
-      req.body.image = `/uploads/Subcategory/${req.file.filename}`;
+      req.body.image = (
+        await uploadFile(req.file.path, "subcategory")
+      ).secure_url;
     }
 
     const updatedSubCategory = await SubCategory.findByIdAndUpdate(

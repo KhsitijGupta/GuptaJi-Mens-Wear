@@ -5,6 +5,7 @@ const Product = require("../models/Product");
 const SubCategory = require("../models/SubCategory");
 const Cart = require("../models/Cart");
 const wishlist = require("../models/wishlist");
+const { uploadFile } = require("../services/cloudinaryService");
 
 // @desc    Upload a new category with image
 // @route   POST /api/categories/upload
@@ -35,10 +36,11 @@ module.exports.uploadCategory = async (req, res) => {
       }
     }
 
+    const uploadedImage = await uploadFile(req.file.path, "category");
     const newCategory = new Category({
       categoryName,
       description,
-      image: `/uploads/Categroy/${req.file.filename}`, // image path
+      image: uploadedImage.secure_url,
       subCategories,
       categoryId,
     });
@@ -135,16 +137,9 @@ module.exports.updateCategory = async (req, res) => {
 
     // ✅ Agar nayi image upload hui hai
     if (req.file) {
-      // Purani image delete karo
-      if (category.image) {
-        const oldPath = path.join(__dirname, "..", category.image);
-        if (fs.existsSync(oldPath)) {
-          fs.unlinkSync(oldPath);
-        }
-      }
-
-      // Nayi image path set karo
-      updateData.image = `/uploads/Categroy/${req.file.filename}`;
+      updateData.image = (
+        await uploadFile(req.file.path, "category")
+      ).secure_url;
     }
 
     const updatedCategory = await Category.findByIdAndUpdate(

@@ -7,6 +7,7 @@ const Product = require("../models/Product");
 const Category = require("../models/Category");
 const SubCategory = require("../models/SubCategory");
 const cron = require("node-cron");
+const { uploadFiles } = require("../services/cloudinaryService");
 const Wishlist = require("../models/wishlist");
 const Cart = require("../models/Cart");
 
@@ -59,10 +60,9 @@ module.exports.uploadProduct = async (req, res) => {
           ).padStart(4, "0")}`
         : "ZKPRO0001";
 
-    // Map uploaded files to image paths
-    const productImage = req.files.map(
-      (file) => `/uploads/product/${file.filename}`,
-    );
+    // Map uploaded files to Cloudinary URLs
+    const uploadedImages = await uploadFiles(req.files, "product");
+    const productImage = uploadedImages.map((img) => img.secure_url);
 
     // // Parse pricing
     // let pricingArray = [];
@@ -192,16 +192,17 @@ module.exports.updateProduct = async (req, res) => {
       );
 
       removedArr.forEach((imgUrl) => {
-        const filePath = path.join(__dirname, "..", imgUrl);
-        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+        if (typeof imgUrl === "string" && imgUrl.startsWith("/uploads/")) {
+          const filePath = path.join(__dirname, "..", imgUrl);
+          if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+        }
       });
     }
 
     /* ================= IMAGE ADD ================= */
     if (req.files?.length > 0) {
-      const newImages = req.files.map(
-        (file) => `/uploads/product/${file.filename}`,
-      );
+      const uploadedImages = await uploadFiles(req.files, "product");
+      const newImages = uploadedImages.map((img) => img.secure_url);
       product.productImage.push(...newImages);
     }
 

@@ -1,5 +1,6 @@
 const DeliveryPerson = require("../models/DeliveryPerson");
 const Order = require("../models/Order"); // assuming you have an Order model
+const { uploadFile } = require("../services/cloudinaryService");
 
 // Utility: Generate next deliveryBoyId like mmdb-0001
 const generateDeliveryBoyId = async () => {
@@ -22,7 +23,12 @@ module.exports.createDeliveryPerson = async (req, res) => {
       deliveryBoyId,
       role: "delivery_person", // 🔥 role set here
       profileImage: req.files?.profileImage
-        ? `/uploads/profileImage/${req.files.profileImage[0].filename}`
+        ? (
+            await uploadFile(
+              req.files.profileImage[0].path,
+              "deliveryPerson/profileImage",
+            )
+          ).secure_url
         : null,
       availabilityStatus: req.body.availabilityStatus || "Available",
       vehicleDetails: {
@@ -30,14 +36,24 @@ module.exports.createDeliveryPerson = async (req, res) => {
         vehicleNumber: req.body.vehicleNumber,
         licenseNumber: req.body.licenseNumber,
         licenseFile: req.files?.licenseFile
-          ? `/uploadDeliveryPerson/${req.files.licenseFile[0].filename}`
+          ? (
+              await uploadFile(
+                req.files.licenseFile[0].path,
+                "deliveryPerson/licenseFile",
+              )
+            ).secure_url
           : null,
       },
       idProof: {
         idType: req.body.idType,
         idNumber: req.body.idNumber,
         idFile: req.files?.idFile
-          ? `/uploadDeliveryPerson/${req.files.idFile[0].filename}`
+          ? (
+              await uploadFile(
+                req.files.idFile[0].path,
+                "deliveryPerson/idFile",
+              )
+            ).secure_url
           : null,
       },
       address: {
@@ -113,17 +129,25 @@ module.exports.updateDeliveryPerson = async (req, res) => {
     const updateData = { ...req.body };
 
     if (req.files?.profileImage) {
-      updateData.profileImage = `/uploadDeliveryPerson/${req.files.profileImage[0].filename}`;
+      const uploaded = await uploadFile(
+        req.files.profileImage[0].path,
+        "deliveryPerson/profileImage",
+      );
+      updateData.profileImage = uploaded.secure_url;
     }
     if (req.files?.licenseFile) {
-      updateData[
-        "vehicleDetails.licenseFile"
-      ] = `/uploadDeliveryPerson/${req.files.licenseFile[0].filename}`;
+      const uploaded = await uploadFile(
+        req.files.licenseFile[0].path,
+        "deliveryPerson/licenseFile",
+      );
+      updateData["vehicleDetails.licenseFile"] = uploaded.secure_url;
     }
     if (req.files?.idFile) {
-      updateData[
-        "idProof.idFile"
-      ] = `/uploadDeliveryPerson/${req.files.idFile[0].filename}`;
+      const uploaded = await uploadFile(
+        req.files.idFile[0].path,
+        "deliveryPerson/idFile",
+      );
+      updateData["idProof.idFile"] = uploaded.secure_url;
     }
 
     if (req.body.assignedAreas) {
@@ -135,7 +159,7 @@ module.exports.updateDeliveryPerson = async (req, res) => {
     const deliveryPerson = await DeliveryPerson.findByIdAndUpdate(
       req.params.id,
       updateData,
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
 
     if (!deliveryPerson) {
@@ -154,7 +178,7 @@ module.exports.updateDeliveryPerson = async (req, res) => {
 module.exports.deleteDeliveryPerson = async (req, res) => {
   try {
     const deliveryPerson = await DeliveryPerson.findByIdAndDelete(
-      req.params.id
+      req.params.id,
     );
     if (!deliveryPerson) {
       return res
@@ -178,7 +202,7 @@ module.exports.approveDeliveryPerson = async (req, res) => {
     const deliveryPerson = await DeliveryPerson.findByIdAndUpdate(
       id,
       { adminApproved },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
 
     if (!deliveryPerson) {
@@ -205,7 +229,7 @@ module.exports.updateAvailability = async (req, res) => {
 
     if (
       !["Available", "On Delivery", "Not Available"].includes(
-        availabilityStatus
+        availabilityStatus,
       )
     ) {
       return res.status(400).json({
@@ -217,7 +241,7 @@ module.exports.updateAvailability = async (req, res) => {
     const deliveryPerson = await DeliveryPerson.findByIdAndUpdate(
       id,
       { availabilityStatus },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
 
     if (!deliveryPerson) {
@@ -245,7 +269,7 @@ module.exports.updateDeliveryPersonStatus = async (req, res) => {
     const deliveryPerson = await DeliveryPerson.findByIdAndUpdate(
       id,
       { adminApproved },
-      { new: true }
+      { new: true },
     );
 
     if (!deliveryPerson) {
@@ -273,7 +297,7 @@ module.exports.updateDeliveryPersonStatusBySelf = async (req, res) => {
     const deliveryPerson = await DeliveryPerson.findByIdAndUpdate(
       id,
       { isActive },
-      { new: true }
+      { new: true },
     );
 
     if (!deliveryPerson) {

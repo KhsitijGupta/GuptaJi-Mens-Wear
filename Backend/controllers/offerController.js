@@ -1,5 +1,6 @@
 const Offer = require("../models/Offer.js");
 const Product = require("../models/Product.js");
+const { uploadFile } = require("../services/cloudinaryService");
 
 const removeOfferFromProducts = async (offer) => {
   if (!offer || !offer._id) return;
@@ -11,7 +12,7 @@ const removeOfferFromProducts = async (offer) => {
         spicialDiscount: null,
         SpecialDiscountedPrice: "",
       },
-    }
+    },
   );
 
   console.log("Products updated:", result.modifiedCount);
@@ -47,7 +48,10 @@ module.exports.createOffer = async (req, res) => {
     }
     // Multer image upload handling
     let offerImage = null;
-    if (req.file) offerImage = `/uploads/offers/${req.file.filename}`;
+    if (req.file) {
+      const uploadResult = await uploadFile(req.file.path, "offers");
+      offerImage = uploadResult.secure_url;
+    }
 
     const existing = await Offer.findOne({ offerId });
     if (existing) {
@@ -138,7 +142,7 @@ module.exports.updateOffer = async (req, res) => {
       {
         new: true,
         runValidators: true,
-      }
+      },
     );
     console.log(updatedOffer);
 
@@ -181,7 +185,7 @@ module.exports.toggleOfferStatus = async (req, res) => {
     const offer = await Offer.findOneAndUpdate(
       { _id },
       { status },
-      { new: true }
+      { new: true },
     );
 
     if (!offer) {

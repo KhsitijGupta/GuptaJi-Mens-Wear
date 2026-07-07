@@ -1,6 +1,7 @@
 const WebsiteBanner = require("../models/WebsiteBanner");
 const fs = require("fs");
 const path = require("path");
+const { uploadFile } = require("../services/cloudinaryService");
 
 module.exports.uploadWebsiteBanner = async (req, res) => {
   try {
@@ -8,8 +9,9 @@ module.exports.uploadWebsiteBanner = async (req, res) => {
       return res.status(400).json({ message: "No image uploaded" });
     }
 
+    const uploadedImage = await uploadFile(req.file.path, "websiteBanner");
     const websiteBanner = new WebsiteBanner({
-      image: `/uploads/websiteBanner/${req.file.filename}`,
+      image: uploadedImage.secure_url,
     });
 
     await websiteBanner.save();
