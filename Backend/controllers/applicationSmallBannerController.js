@@ -15,10 +15,7 @@ module.exports.uploadApplicationSmallBanner = async (req, res) => {
     const lastBanner = await ApplicationBanner.findOne().sort({ order: -1 });
     const newOrder = lastBanner ? lastBanner.order + 1 : 0;
 
-    const uploadedImage = await uploadFile(
-      req.file.path,
-      "applicationSmallBanner",
-    );
+    const uploadedImage = await uploadFile(req.file, "applicationSmallBanner");
     const applicationBanner = new ApplicationBanner({
       image: uploadedImage.secure_url,
       order: newOrder,

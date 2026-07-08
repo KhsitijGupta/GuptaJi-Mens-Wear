@@ -42,7 +42,7 @@ module.exports.uploadSubCategory = async (req, res) => {
       subCategoryId = "ZKSCAT0001";
     }
 
-    const uploadedImage = await uploadFile(req.file.path, "subcategory");
+    const uploadedImage = await uploadFile(req.file, "subcategory");
     const newSubCategory = new SubCategory({
       subCategoryName,
       description,
@@ -130,9 +130,7 @@ module.exports.updateSubCategory = async (req, res) => {
 
     // ✅ If new image uploaded → delete old one
     if (req.file) {
-      req.body.image = (
-        await uploadFile(req.file.path, "subcategory")
-      ).secure_url;
+      req.body.image = (await uploadFile(req.file, "subcategory")).secure_url;
     }
 
     const updatedSubCategory = await SubCategory.findByIdAndUpdate(

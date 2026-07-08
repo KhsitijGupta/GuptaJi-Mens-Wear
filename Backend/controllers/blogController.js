@@ -6,7 +6,7 @@ module.exports.uploadBlog = async (req, res) => {
   try {
     const { title, date, description, link } = req.body;
     const image = req.file
-      ? (await uploadFile(req.file.path, "blog")).secure_url
+      ? (await uploadFile(req.file, "blog")).secure_url
       : null;
 
     const blog = new Blog({ title, date, description, link, image });
@@ -36,7 +36,7 @@ module.exports.updateBlog = async (req, res) => {
 
     // Only update image if a new file is uploaded
     if (req.file) {
-      updateData.image = (await uploadFile(req.file.path, "blog")).secure_url;
+      updateData.image = (await uploadFile(req.file, "blog")).secure_url;
     }
 
     const updatedBlog = await Blog.findByIdAndUpdate(

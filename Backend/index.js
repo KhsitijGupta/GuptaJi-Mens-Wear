@@ -6,9 +6,7 @@ const cors = require("cors");
 const morgan = require("morgan");
 const helmet = require("helmet");
 
-dotenv.config();
-
-// Import routes
+dotenv.config({ path: path.resolve(__dirname, ".env") });
 const adminRoutes = require("./routes/adminRoutes.js");
 const userRoutes = require("./routes/userRoute.js");
 const categoryRoutes = require("./routes/categoryRoutes.js");
@@ -53,7 +51,7 @@ app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("//uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Routes
 app.use("/api/admins", adminRoutes);

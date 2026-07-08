@@ -25,7 +25,7 @@ module.exports.createDeliveryPerson = async (req, res) => {
       profileImage: req.files?.profileImage
         ? (
             await uploadFile(
-              req.files.profileImage[0].path,
+              req.files.profileImage[0],
               "deliveryPerson/profileImage",
             )
           ).secure_url
@@ -38,7 +38,7 @@ module.exports.createDeliveryPerson = async (req, res) => {
         licenseFile: req.files?.licenseFile
           ? (
               await uploadFile(
-                req.files.licenseFile[0].path,
+                req.files.licenseFile[0],
                 "deliveryPerson/licenseFile",
               )
             ).secure_url
@@ -48,12 +48,8 @@ module.exports.createDeliveryPerson = async (req, res) => {
         idType: req.body.idType,
         idNumber: req.body.idNumber,
         idFile: req.files?.idFile
-          ? (
-              await uploadFile(
-                req.files.idFile[0].path,
-                "deliveryPerson/idFile",
-              )
-            ).secure_url
+          ? (await uploadFile(req.files.idFile[0], "deliveryPerson/idFile"))
+              .secure_url
           : null,
       },
       address: {
@@ -130,21 +126,21 @@ module.exports.updateDeliveryPerson = async (req, res) => {
 
     if (req.files?.profileImage) {
       const uploaded = await uploadFile(
-        req.files.profileImage[0].path,
+        req.files.profileImage[0],
         "deliveryPerson/profileImage",
       );
       updateData.profileImage = uploaded.secure_url;
     }
     if (req.files?.licenseFile) {
       const uploaded = await uploadFile(
-        req.files.licenseFile[0].path,
+        req.files.licenseFile[0],
         "deliveryPerson/licenseFile",
       );
       updateData["vehicleDetails.licenseFile"] = uploaded.secure_url;
     }
     if (req.files?.idFile) {
       const uploaded = await uploadFile(
-        req.files.idFile[0].path,
+        req.files.idFile[0],
         "deliveryPerson/idFile",
       );
       updateData["idProof.idFile"] = uploaded.secure_url;

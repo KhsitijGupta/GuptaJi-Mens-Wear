@@ -49,7 +49,7 @@ module.exports.completeUserProfile = async (req, res) => {
 
     let profileImage = null;
     if (req.file) {
-      profileImage = (await uploadFile(req.file.path, "users/profileImage"))
+      profileImage = (await uploadFile(req.file, "users/profileImage"))
         .secure_url;
     }
 
@@ -125,7 +125,7 @@ module.exports.signup = async (req, res) => {
     // Handle profile image
     let profileImage = null;
     if (req.file) {
-      profileImage = (await uploadFile(req.file.path, "users/profileImage"))
+      profileImage = (await uploadFile(req.file, "users/profileImage"))
         .secure_url;
     }
 
@@ -217,7 +217,7 @@ module.exports.editUser = async (req, res) => {
     // 6️⃣ Handle profile image if using file upload
     if (req.file) {
       user.profileImage = (
-        await uploadFile(req.file.path, "users/profileImage")
+        await uploadFile(req.file, "users/profileImage")
       ).secure_url;
     }
 

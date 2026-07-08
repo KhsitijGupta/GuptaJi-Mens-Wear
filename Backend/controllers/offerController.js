@@ -49,7 +49,7 @@ module.exports.createOffer = async (req, res) => {
     // Multer image upload handling
     let offerImage = null;
     if (req.file) {
-      const uploadResult = await uploadFile(req.file.path, "offers");
+      const uploadResult = await uploadFile(req.file, "offers");
       offerImage = uploadResult.secure_url;
     }
 

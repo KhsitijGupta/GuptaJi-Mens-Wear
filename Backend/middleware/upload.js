@@ -10,41 +10,7 @@ const ensureDirectoryExists = (dir) => {
 };
 
 // Multer storage configuration
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    let folder;
-
-    if (file.fieldname === "profileImage") {
-      folder = path.join(__dirname, "..", "uploads", "profileImage");
-    } else if (file.fieldname === "websiteBannerImage") {
-      folder = path.join(__dirname, "..", "uploads", "websiteBanner");
-    } else if (file.fieldname === "applicationBannerImage") {
-      folder = path.join(__dirname, "..", "uploads", "applicationBanner");
-    } else if (file.fieldname === "applicationSmallBannerImage") {
-      folder = path.join(__dirname, "..", "uploads", "applicationSmallBanner");
-    } else if (file.fieldname === "blogImage") {
-      folder = path.join(__dirname, "..", "uploads", "blog");
-    } else if (file.fieldname === "categoryImage") {
-      folder = path.join(__dirname, "..", "uploads", "Categroy");
-    } else if (file.fieldname === "subCategoryImage") {
-      folder = path.join(__dirname, "..", "uploads", "Subcategory");
-    } else if (file.fieldname === "productImage") {
-      folder = path.join(__dirname, "..", "uploads", "product");
-    } else if (file.fieldname === "offerImage") {
-      folder = path.join(__dirname, "..", "uploads", "offers");
-    } else {
-      return cb(new Error("Invalid file field name"), null);
-    }
-
-    ensureDirectoryExists(folder);
-    cb(null, folder);
-  },
-
-  filename: function (req, file, cb) {
-    const uniqueName = `${Date.now()}-${file.originalname}`;
-    cb(null, uniqueName);
-  },
-});
+const storage = multer.memoryStorage();
 
 // File filter logic
 const fileFilter = (req, file, cb) => {

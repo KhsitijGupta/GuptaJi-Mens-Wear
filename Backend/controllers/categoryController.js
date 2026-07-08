@@ -36,7 +36,7 @@ module.exports.uploadCategory = async (req, res) => {
       }
     }
 
-    const uploadedImage = await uploadFile(req.file.path, "category");
+    const uploadedImage = await uploadFile(req.file, "category");
     const newCategory = new Category({
       categoryName,
       description,
@@ -137,9 +137,7 @@ module.exports.updateCategory = async (req, res) => {
 
     // ✅ Agar nayi image upload hui hai
     if (req.file) {
-      updateData.image = (
-        await uploadFile(req.file.path, "category")
-      ).secure_url;
+      updateData.image = (await uploadFile(req.file, "category")).secure_url;
     }
 
     const updatedCategory = await Category.findByIdAndUpdate(

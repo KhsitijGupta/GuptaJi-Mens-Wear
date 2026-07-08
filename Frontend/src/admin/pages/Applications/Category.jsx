@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Trash2, Plus, Edit, X } from "lucide-react";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";import api from '@/utils/api';
+import { useNavigate } from "react-router-dom";
+import api from '@/utils/api';
 import Pagination from "../../component/Pagination";
 
 const ITEMS_PER_PAGE = 25;
@@ -168,7 +169,7 @@ const Category = () => {
       });
       setPreviewUrl(null);
     } catch (error) {
-      console.error("Save failed:", error);
+      console.log("Save failed:", error);
       Swal.fire("Error", "Failed to save category", "error");
     }
   };

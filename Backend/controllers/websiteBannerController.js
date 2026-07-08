@@ -9,7 +9,7 @@ module.exports.uploadWebsiteBanner = async (req, res) => {
       return res.status(400).json({ message: "No image uploaded" });
     }
 
-    const uploadedImage = await uploadFile(req.file.path, "websiteBanner");
+    const uploadedImage = await uploadFile(req.file, "websiteBanner");
     const websiteBanner = new WebsiteBanner({
       image: uploadedImage.secure_url,
     });
