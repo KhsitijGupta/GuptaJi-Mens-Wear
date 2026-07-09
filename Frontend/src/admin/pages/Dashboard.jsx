@@ -37,44 +37,58 @@ const Dashboard = ({ setActiveView }) => {
   useEffect(() => {
     if (!token) return;
 
-    const fetchData = async () => {
-      setLoading(true);
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    };
 
+    const fetchStats = async () => {
       try {
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        };
-        console.log(token);
+        const res = await axios.get("/api/dashboard/stats", config);
+        setStats(res?.data?.data);
+      } catch (err) {
+        console.error("Stats Error:", err);
+      }
+    };
 
-        const [statsRes, ordersRes, weeklyRes] = await Promise.all([
-          axios.get("/api/dashboard/stats", config),
-          axios.get("/api/orders/getAllOrders", config),
-          axios.get("/api/orders/getWeeklyOrdersByDay", config),
-        ]);
+    const fetchOrders = async () => {
+      try {
+        const res = await axios.get("/api/orders/getAllOrders", config);
+        setOrders(res?.data?.orders?.slice(0, 20));
+      } catch (err) {
+        console.error("Orders Error:", err);
+      }
+    };
 
-        setStats(statsRes?.data?.data);
-        setOrders(ordersRes?.data?.orders?.slice(0, 20));
+    const fetchWeeklyOrders = async () => {
+      try {
+        const res = await axios.get("/api/orders/getWeeklyOrdersByDay", config);
 
         setSalesData(
-          weeklyRes?.data?.data.map(({ day, orders }) => ({
+          res?.data?.data?.map(({ day, orders }) => ({
             day,
             orders,
           })),
         );
       } catch (err) {
-        console.error(err);
-        setError("Failed to load dashboard data");
-      } finally {
-        setLoading(false);
+        console.error("Weekly Orders Error:", err);
       }
     };
 
-    fetchData();
-  }, [token]);
+    const loadDashboard = async () => {
+      setLoading(true);
 
+      await fetchStats();
+      await fetchOrders();
+      await fetchWeeklyOrders();
+
+      setLoading(false);
+    };
+
+    loadDashboard();
+  }, [token]);
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
       case "completed":
