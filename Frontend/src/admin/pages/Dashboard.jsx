@@ -329,7 +329,8 @@
 
 // export default Dashboard;
 
-import React, { useState, useEffect } from "react";import api from '@/utils/api';
+import React, { useState, useEffect } from "react";
+import api from '@/utils/api';
 import {
   ShoppingBag,
   DollarSign,
@@ -365,7 +366,7 @@ const Dashboard = ({ setActiveView }) => {
   const token = authData?.token;
 
   const apiCall = api.create({
-    baseURL: "/api",
+    baseURL: "",
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",

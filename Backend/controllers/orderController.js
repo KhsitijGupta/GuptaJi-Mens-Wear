@@ -212,31 +212,31 @@ module.exports.createOrder = async (req, res) => {
       walletBalance: updatedUser.coins,
     });
 
-    setImmediate(async () => {
-      try {
-        const fire = await fireModel
-          .findOne({ userId })
-          .sort({ createdAt: -1 })
-          .lean();
+    // setImmediate(async () => {
+    //   try {
+    //     const fire = await fireModel
+    //       .findOne({ userId })
+    //       .sort({ createdAt: -1 })
+    //       .lean();
 
-        if (fire?.fcmToken) {
-          const title = "Order Placed Successfully";
-          const body = `Order ${newCoId} placed. Payable ₹${payableAmount}`;
-          console.log(fire.fcmToken);
-          await Notification.create({ userId, title, body });
-          await sendNotification(fire.fcmToken, title, body);
-        }
+    //     if (fire?.fcmToken) {
+    //       const title = "Order Placed Successfully";
+    //       const body = `Order ${newCoId} placed. Payable ₹${payableAmount}`;
+    //       console.log(fire.fcmToken);
+    //       await Notification.create({ userId, title, body });
+    //       await sendNotification(fire.fcmToken, title, body);
+    //     }
 
-        await sendMail(
-          [updatedUser.email, "kg221688@gmail.com"],
-          "kg221688@gmail.com",
-          `New Order - ${newCoId}`,
-          emailHTMLGenerator(cart, updatedUser, address, order),
-        );
-      } catch (err) {
-        console.error("Post order async error:", err);
-      }
-    });
+         // await sendMail(
+        //   [updatedUser.email, "kg221688@gmail.com"],
+        //   "kg221688@gmail.com",
+        //   `New Order - ${newCoId}`,
+        //   emailHTMLGenerator(cart, updatedUser, address, order),
+        // );
+    //   } catch (err) {
+    //     console.error("Post order async error:", err);
+    //   }
+    // });
   } catch (error) {
     console.error("Create order error:", error);
     res.status(500).json({ message: error.message });
