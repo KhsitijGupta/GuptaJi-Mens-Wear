@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useRef } from "react";import api from '@/utils/api';
+import React, { useEffect, useState, useRef } from "react";
+import api from "@/utils/api";
 import Swal from "sweetalert2";
 import { useDispatch } from "react-redux";
 import { createAddress, fetchAddresses } from "../../redux/slices/addressSlice";
@@ -250,7 +251,6 @@ const AddressModal = ({ show, setShow, user, onAddressCreated }) => {
             <input
               name="pincode"
               value={formData.pincode}
-              readOnly
               className="w-full border rounded-lg p-2 mt-1 bg-gray-100"
             />
           </div>
