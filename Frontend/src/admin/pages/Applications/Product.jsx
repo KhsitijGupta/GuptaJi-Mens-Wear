@@ -773,7 +773,7 @@ const Product = () => {
             })}
           </tbody>
         </table>
-        {filteredData.length > ITEMS_PER_PAGE && (
+        {filteredProducts.length > ITEMS_PER_PAGE && (
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
@@ -1011,7 +1011,7 @@ const Product = () => {
             </div>
           );
         })}
-        {filteredData.length > ITEMS_PER_PAGE && (
+        {filteredProducts.length > ITEMS_PER_PAGE && (
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
