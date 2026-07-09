@@ -330,7 +330,7 @@
 // export default Dashboard;
 
 import React, { useState, useEffect } from "react";
-import api from '@/utils/api';
+import axios from "axios";
 import {
   ShoppingBag,
   DollarSign,
@@ -365,51 +365,45 @@ const Dashboard = ({ setActiveView }) => {
   const authData = JSON.parse(sessionStorage.getItem("admin"));
   const token = authData?.token;
 
-  const apiCall = api.create({
-    baseURL: "",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-  });
+useEffect(() => {
+  if (!token) return;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
+  const fetchData = async () => {
+    setLoading(true);
 
-        const [statsRes, ordersRes, weeklyRes] = await Promise.all([
-          apiCall.get("/dashboard/stats"),
-          apiCall.get("/orders/getAllOrders"),
-          apiCall.get("/orders/getWeeklyOrdersByDay"), // ✅ Your new endpoint
-        ]);
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      };
 
-        setStats(statsRes.data.data);
-        setOrders(ordersRes.data.orders.slice(0, 20));
+      const [statsRes, ordersRes, weeklyRes] = await Promise.all([
+        axios.get("/api/dashboard/stats", config),
+        axios.get("/api/orders/getAllOrders", config),
+        axios.get("/api/orders/getWeeklyOrdersByDay", config),
+      ]);
 
-        // ✅ ORDERS CHART DATA - Perfect format from your backend
-        const weeklyData = weeklyRes.data.data;
-        console.log("📊 Weekly Orders:", weeklyData);
+      setStats(statsRes.data.data);
+      setOrders(ordersRes.data.orders.slice(0, 20));
 
-        const ordersChartData = weeklyData.map((item) => ({
-          day: item.day, // "Week 32 - 2025"
-          orders: item.orders,
-        }));
-
-        console.log("📈 Weekly Chart Data:", ordersChartData);
-        setSalesData(ordersChartData);
-      } catch (err) {
-        setError("Failed to load dashboard data");
-        console.error("Dashboard Error:", err.response?.data || err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (token) {
-      fetchData();
+      setSalesData(
+        weeklyRes.data.data.map(({ day, orders }) => ({
+          day,
+          orders,
+        }))
+      );
+    } catch (err) {
+      console.error(err);
+      setError("Failed to load dashboard data");
+    } finally {
+      setLoading(false);
     }
-  }, [token]);
+  };
+
+  fetchData();
+}, [token]);
 
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
@@ -587,7 +581,7 @@ const Dashboard = ({ setActiveView }) => {
                     </span>
                     <span
                       className={`px-3 py-1 text-xs font-bold rounded-full ${getStatusColor(
-                        order.orderStatus || order.status
+                        order.orderStatus || order.status,
                       )}`}
                     >
                       {order.orderStatus || order.status}
