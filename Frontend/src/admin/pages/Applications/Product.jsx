@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 // import { Trash2, Plus, Edit, X } from "lucide-react";
 import Swal from "sweetalert2";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";import api from '@/utils/api';
+import "react-datepicker/dist/react-datepicker.css";
+import api from '@/utils/api';
 import {
   X,
   Trash2,
@@ -166,7 +167,7 @@ const Product = () => {
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE,
   );
-  const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
 
   // Utility: get category/subcategory names
   const getCategoryName = (id) =>
