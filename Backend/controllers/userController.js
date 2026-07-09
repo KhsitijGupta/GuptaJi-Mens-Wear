@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 const User = require("../models/User");
 const Address = require("../models/Address");
 const sendMail = require("../utils/sendMail");
@@ -31,6 +32,8 @@ module.exports.completeUserProfile = async (req, res) => {
         .json({ msg: "All required fields must be filled" });
     }
 
+    const normalizedGender = gender ? gender.toLowerCase() : undefined;
+
     // Check existing email
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -58,9 +61,9 @@ module.exports.completeUserProfile = async (req, res) => {
       fullName,
       email,
       phone,
-      password, // 🔐 password will auto-hash via pre-save middleware
+      password,
       profileImage,
-      gender,
+      gender: normalizedGender,
       role: "user",
     });
 
@@ -84,12 +87,12 @@ module.exports.completeUserProfile = async (req, res) => {
 
 module.exports.signup = async (req, res) => {
   try {
-    const { fullName, email, phone } = req.body;
+    const { fullName, email, phone, password, gender } = req.body;
 
-    if (!fullName || !email || !phone) {
+    if (!fullName || !email || !phone || !password) {
       return res.status(400).json({
         success: false,
-        message: "Full name, email and phone are required",
+        message: "Full name, email, phone and password are required",
       });
     }
 
@@ -129,13 +132,17 @@ module.exports.signup = async (req, res) => {
         .secure_url;
     }
 
+    const normalizedGender = gender ? gender.toLowerCase() : undefined;
+
     // Create user
     const user = new User({
       userId: newUserId,
       fullName,
       email,
       phone,
+      password,
       profileImage,
+      gender: normalizedGender,
       role: "user",
     });
 
@@ -250,7 +257,6 @@ module.exports.loginWithPassword = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Validate input
     if (!email || !password) {
       return res.status(400).json({
         success: false,
@@ -258,7 +264,6 @@ module.exports.loginWithPassword = async (req, res) => {
       });
     }
 
-    // Find user & include password explicitly
     const user = await User.findOne({ email }).select("+password");
 
     if (!user) {
@@ -268,7 +273,6 @@ module.exports.loginWithPassword = async (req, res) => {
       });
     }
 
-    // Compare password
     const isMatch = await user.comparePassword(password);
 
     if (!isMatch) {
@@ -278,7 +282,6 @@ module.exports.loginWithPassword = async (req, res) => {
       });
     }
 
-    // Generate JWT
     const token = generateToken(user);
 
     res.status(200).json({
@@ -289,8 +292,8 @@ module.exports.loginWithPassword = async (req, res) => {
         _id: user._id,
         fullName: user.fullName,
         email: user.email,
-        // role: user.role,
-        // coins: user.coins,
+        role: user.role,
+        profileImage: user.profileImage,
       },
     });
   } catch (error) {
@@ -327,58 +330,7 @@ module.exports.requestOtp = async (req, res) => {
 };
 
 module.exports.loginUser = async (req, res) => {
-  try {
-    const { email, otp } = req.body;
-
-    // Validate input
-    if (!email || !otp) {
-      return res.status(400).json({ msg: "Email and OTP are required" });
-    }
-
-    // Check if user exists
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res
-        .status(400)
-        .json({ msg: "Invalid credentials - user not found" });
-    }
-
-    // Get OTP from memory store
-    const storedOtp = otpStore.get(email);
-
-    // Debug log (you can remove later)
-    console.log("Stored OTP:", storedOtp);
-
-    // If OTP not found or expired
-    if (!storedOtp) {
-      return res.status(400).json({ msg: "OTP expired or not requested" });
-    }
-
-    // Validate OTP and expiry
-    if (String(storedOtp.otp) !== String(otp)) {
-      return res.status(400).json({ msg: "Invalid OTP" });
-    }
-
-    if (storedOtp.expiresAt < Date.now()) {
-      otpStore.delete(email); // clean expired OTP
-      return res.status(400).json({ msg: "OTP has expired" });
-    }
-
-    // Delete OTP after successful verification
-    otpStore.delete(email);
-
-    // Generate JWT token
-    const token = generateToken(user);
-
-    return res.status(200).json({
-      msg: "Login successful",
-      token,
-      user,
-    });
-  } catch (error) {
-    console.error("Login error:", error);
-    return res.status(500).json({ msg: "Server error" });
-  }
+  return module.exports.loginWithPassword(req, res);
 };
 module.exports.getUserProfile = async (req, res) => {
   try {
