@@ -46,7 +46,9 @@ const Dashboard = ({ setActiveView }) => {
 
     const fetchStats = async () => {
       try {
-        const res = await axios.get("/api/dashboard/stats", config);
+        const res = await api.get(`/api/dashboard/stats`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setStats(res?.data?.data);
       } catch (err) {
         console.error("Stats Error:", err);
@@ -55,10 +57,13 @@ const Dashboard = ({ setActiveView }) => {
 
     const fetchOrders = async () => {
       try {
-        const res = await axios.get("/api/orders/getAllOrders", config);
-        setOrders(res?.data?.orders?.slice(0, 20));
-      } catch (err) {
-        console.error("Orders Error:", err);
+        const res = await api.get(`/api/orders/getAllOrders`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = res?.data?.orders.slice(0, 10) || [];
+        setOrders(data);
+      } catch (error) {
+        console.error("Error fetching orders:", error);
       }
     };
 
