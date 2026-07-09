@@ -252,6 +252,7 @@ const AddressModal = ({ show, setShow, user, onAddressCreated }) => {
               name="pincode"
               value={formData.pincode}
               className="w-full border rounded-lg p-2 mt-1 bg-gray-100"
+              onChange={handleChange}
             />
           </div>
 
