@@ -238,7 +238,7 @@ const Dashboard = ({ setActiveView }) => {
             Recent Orders (20)
           </h2>
           <div className="space-y-3">
-            {orders.length > 0 ? (
+            {orders?.length > 0 ? (
               orders.map((order) => (
                 <div
                   key={order?._id}
