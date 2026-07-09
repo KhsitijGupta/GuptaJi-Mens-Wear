@@ -47,6 +47,7 @@ const Dashboard = ({ setActiveView }) => {
             "Content-Type": "application/json",
           },
         };
+        console.log(token);
 
         const [statsRes, ordersRes, weeklyRes] = await Promise.all([
           axios.get("/api/dashboard/stats", config),
@@ -54,11 +55,11 @@ const Dashboard = ({ setActiveView }) => {
           axios.get("/api/orders/getWeeklyOrdersByDay", config),
         ]);
 
-        setStats(statsRes.data.data);
-        setOrders(ordersRes.data.orders.slice(0, 20));
+        setStats(statsRes?.data?.data);
+        setOrders(ordersRes?.data?.orders?.slice(0, 20));
 
         setSalesData(
-          weeklyRes.data.data.map(({ day, orders }) => ({
+          weeklyRes?.data?.data.map(({ day, orders }) => ({
             day,
             orders,
           })),
